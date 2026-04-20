@@ -1,35 +1,13 @@
 @import './base.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
+@import 'tailwindcss';
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+@theme {
+  --color-primary: #558b6e;
+  --color-beige: #f3f3e2;
+  --color-cinnamon: #b07156;
+  --color-muted-teal: #a3bda8;
+  --color-jungle-teal: #5b8e7d;
+  --color-lemon-chiffon: #e1e1b7;
+  --color-gunmetal: #3c3c3b;
 }
