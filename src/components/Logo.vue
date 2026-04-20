@@ -41,7 +41,7 @@ const {
 })
 
 const uid = Math.random().toString(36).slice(2, 7)
-const gradientFillId     = computed(() => `gradientFill-${uid}`)
+const gradientFillId = computed(() => `gradientFill-${uid}`)
 const gradientBackFillId = computed(() => `gradientBackFill-${uid}`)
 
 </script>
