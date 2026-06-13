@@ -6,8 +6,32 @@
   --color-primary: #558b6e;
   --color-beige: #f3f3e2;
   --color-cinnamon: #b07156;
+  --color-pumpkin: #d8973c;
   --color-muted-teal: #a3bda8;
   --color-jungle-teal: #5b8e7d;
+  --color-dk-jungle-teal: #417b5a;
   --color-lemon-chiffon: #e1e1b7;
+
+  --color-slate-grey: #677e8a;
+  --color-pale-slate: #b7c7cd;
+  --color-pale-oak: #dacaaa;
+  --color-soft-linen: #f3ede3;
+
+  /* background greys - lightest to darkest */
+  --color-lt-grey: #b8b8b7;
+  --color-md-grey: #7c7c79;
   --color-gunmetal: #3c3c3b;
+  --color-graphite: #272829;
+  --color-carbon: #22201f;
+
+  /* animations */
+  --animate-drop-bounce: drop-bounce 1s ease;
+  --animate-say-hello: say-hello 4s ease-in-out;
+
+  /* fonts */
+  --font-crimson-text: 'CrimsonText', serif;
+  --font-crimson-text-bold: 'CrimsonText-Bold', serif;
+  --font-crimson-text-semi-bold: 'CrimsonText-SemiBold', serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-inconsolata: 'Inconsolata', sans-serif;
 }

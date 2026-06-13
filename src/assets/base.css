@@ -84,3 +84,83 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* KEYFRAMES */
+@keyframes drop-bounce {
+  0% {
+    transform: translateY(-100vh) rotate(40deg);
+  }
+  40% {
+    transform: translateY(-30px) rotate(40deg);
+  }
+  65% {
+    transform: translateY(-200px) rotate(-30deg);
+  }
+  75% {
+    transform: translate(0);
+  }
+  85% {
+    transform: translateY(-100px) rotate(20deg);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes say-hello {
+  25% {
+    transform: translateX(0);
+  }
+  35% {
+    transform: translateX(-50vw);
+  }
+  95% {
+    transform: translateX(-50vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* FONT DEFINITIONS */
+@font-face {
+  font-family: 'CrimsonText-Bold';
+  src: url('@/assets/fonts/CrimsonText-Bold.ttf') format('ttf');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CrimsonText';
+  src: url('@/assets/fonts/CrimsonText-Regular.ttf') format('ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CrimsonText-SemiBold';
+  src: url('@/assets/fonts/CrimsonText-SemiBold.ttf') format('ttf');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('@/assets/fonts/Montserrat-VariableFont_wght.ttf') format('ttf');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inconsolata';
+  src: url('@/assets/fonts/Inconsolata-VariableFont_wdth,wght.ttf') format('ttf');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+/* example for copy 
+@font-face  {
+  font-family: 'CrimsonText-Bold';
+  src: url('@/assets/fonts/CrimsonText-Bold') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+}
+*/

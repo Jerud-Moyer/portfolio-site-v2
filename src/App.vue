@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { provide } from 'vue'
+import { RouterView } from 'vue-router'
+import { useScrollMonitor } from './composables/useScrollMonitor'
 
+const scrollMonitor = useScrollMonitor()
+provide('scroll-monitor', scrollMonitor)
 </script>
 
 <template>
-  
-
-  <RouterView />
+  <div>
+    <RouterView />
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
