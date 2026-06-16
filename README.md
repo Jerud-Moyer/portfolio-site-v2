@@ -46,3 +46,34 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Some examples of Logo element usage
+
+```html
+<div class="flex flex-row bg-gunmetal p-6">
+  <Logo outlineColor="#FFFFFF" fillColor="transparent" :width="200" />
+  <Logo :gradient-fill="true" />
+</div>
+<div class="flex flex-row bg-gunmetal p-6">
+  <Logo
+    :gradient-fill="true"
+    gradient-color-one="#3c3c3b"
+    gradient-color-two="#5B8E7D"
+    outline-color="#B07156"
+  />
+  <Logo outline-color="#3c3c3b" fill-color="#B07156" back-fill-color="#558B6E" :width="360" />
+</div>
+<div class="flex flex-row bg-gunmetal p-6">
+  <Logo outlineColor="#FFFFFF" fillColor="transparent" :width="200" />
+  <Logo :gradient-fill="true" />
+</div>
+<div class="flex flex-row bg-gunmetal p-6">
+  <Logo
+    :gradient-fill="true"
+    gradient-color-one="#3c3c3b"
+    gradient-color-two="#5B8E7D"
+    outline-color="#B07156"
+  />
+  <Logo outline-color="#3c3c3b" fill-color="#B07156" back-fill-color="#558B6E" :width="360" />
+</div>
+```
