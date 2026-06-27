@@ -6,6 +6,8 @@ export const TARGET_HEADER_HEIGHT = 86
 export const SCROLL_SECTION_BREAKS = {
   a: { start: 0, end: 4000 },
   b: { start: 3500, end: 10000 },
+  c: { start: 9500, end: 15000 },
+  d: { start: 14500, end: 20000 },
 }
 
 export type SectionId = keyof typeof SCROLL_SECTION_BREAKS
@@ -30,6 +32,10 @@ export function getSectionProgressByVh(
 export function lerp(start: number, end: number, progress: number): number {
   //  linear interpolation
   return start + progress * (end - start)
+}
+
+export function smoothstep(t: number) {
+  return t * t * (3 - 2 * t)
 }
 
 export function useScrollMonitor() {

@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { getSectionProgress, getSectionProgressByVh, lerp } from '@/composables/useScrollMonitor'
+import {
+  getSectionProgress,
+  getSectionProgressByVh,
+  lerp,
+  smoothstep,
+} from '@/composables/useScrollMonitor'
 import type { ScrollMonitor } from '@/types'
 import { computed, inject } from 'vue'
 import CircleDeco from '../CircleDeco.vue'
@@ -9,8 +14,6 @@ const scrollY = scrollMonitor?.scrollY
 const vh = scrollMonitor?.viewportHeight
 
 const subHeadingTranslateY = computed(() => {
-  // this is not working?!
-  //   return `${(scrollY?.value ?? 0) * 0.005}vh`
   const progress = getSectionProgress(scrollY?.value ?? 0, 'b')
   return `${lerp(0, -120, progress)}vh`
 })
@@ -28,6 +31,13 @@ const circleTranslateY = computed(() => {
 const headingTranslateX = computed(() => {
   const progress = getSectionProgress((scrollY?.value ?? 0) * 1.8, 'b')
   return `${lerp(-30, 35, progress)}vw`
+})
+
+const opacity = computed<number>(() => {
+  const progress = getSectionProgress(scrollY?.value ?? 0, 'b')
+  // 0→0.5: fade in (0 to 1), 0.5→1: fade out (1 to 0)
+  if (progress <= 0.5) return smoothstep(progress * 2)
+  return smoothstep((1 - progress) * 2)
 })
 </script>
 
@@ -58,11 +68,11 @@ const headingTranslateX = computed(() => {
       :style="{
         transition: 'transform 100ms',
         transform: `translateX(${headingTranslateX})`,
+        opacity,
       }"
     >
       software developer
     </p>
-    <div class="flex flex-row"></div>
   </div>
 </template>
 

@@ -35,3 +35,10 @@
   --font-montserrat: 'Montserrat', sans-serif;
   --font-inconsolata: 'Inconsolata', sans-serif;
 }
+
+a {
+  @apply text-lemon-chiffon hover:text-muted-teal font-montserrat transition-colors duration-100;
+}
+
+p {
+}

@@ -10,3 +10,12 @@ export type ScrollMonitor = {
   viewportWidth: Ref<number>
   scrollProgress: ComputedRef<number>
 }
+
+export type Project = {
+  title: string
+  description: string
+  technologies: string[]
+  projectUrl: string
+  gitUrl: string
+  imgFileName: string
+}
