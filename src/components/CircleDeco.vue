@@ -16,11 +16,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <div :style="{ width: width + 'px' }">
+  <div :style="{ width: width + 'px' }" class="rounded-full">
     <svg
       viewBox="-2 -2 104 104"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
+      class="block"
       :fill="props.fillColor"
     >
       <circle cx="50" cy="50" r="50" :stroke="props.outlineColor" stroke-width="2" />

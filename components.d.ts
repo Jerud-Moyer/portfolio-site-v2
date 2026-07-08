@@ -11,13 +11,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    2_section: typeof import('./src/components/sections/2_section.vue')['default']
     ASection: typeof import('./src/components/sections/ASection.vue')['default']
     BSection: typeof import('./src/components/sections/BSection.vue')['default']
     Button: typeof import('primevue/button')['default']
     CircleDeco: typeof import('./src/components/CircleDeco.vue')['default']
+    ContactForm: typeof import('./src/components/ContactForm.vue')['default']
     CSection: typeof import('./src/components/sections/CSection.vue')['default']
     DSection: typeof import('./src/components/sections/DSection.vue')['default']
+    ESection: typeof import('./src/components/sections/ESection.vue')['default']
+    FloatLabel: typeof import('primevue/floatlabel')['default']
     Header: typeof import('./src/components/Header.vue')['default']
     HJeader: typeof import('./src/components/HJeader.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
@@ -25,10 +27,12 @@ declare module 'vue' {
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
+    InputText: typeof import('primevue/inputtext')['default']
     Logo: typeof import('./src/components/Logo.vue')['default']
     ProjectCard: typeof import('./src/components/ProjectCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SectionContainer: typeof import('./src/components/sections/SectionContainer.vue')['default']
+    TextArea: typeof import('primevue/textarea')['default']
   }
 }

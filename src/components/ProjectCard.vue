@@ -47,7 +47,7 @@ const technologiesString = computed<string>(() => {
 
 <template>
   <div
-    class="aspect-square flex flex-col border-2 border-jungle-teal rounded-lg bg-carbon"
+    class="aspect-square flex flex-col border-2 border-jungle-teal rounded-lg bg-carbon max-w-[60vh]"
     :style="{
       width: `${props.width}vw`,
     }"

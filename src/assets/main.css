@@ -25,6 +25,7 @@
   --color-carbon: #22201f;
 
   /* animations */
+  --animate-fade-in: fade-in 0.5s ease;
   --animate-drop-bounce: drop-bounce 1s ease;
   --animate-say-hello: say-hello 4s ease-in-out;
 
@@ -41,4 +42,5 @@ a {
 }
 
 p {
+  
 }

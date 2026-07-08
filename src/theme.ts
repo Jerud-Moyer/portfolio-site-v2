@@ -35,12 +35,16 @@ export default definePreset(Material, {
         },
       },
     },
+    focusRing: {
+      width: '2px',
+      style: 'solid',
+      color: '{primary.color}',
+      offset: '1px',
+    },
   },
+
   components: {
     toolbar: {
-      borderRadius: '0px',
-      padding: '200px',
-
       colorScheme: {
         dark: {
           root: {},
@@ -48,35 +52,37 @@ export default definePreset(Material, {
       },
     },
     button: {
-      paddingX: '60px',
-
-      colorScheme: {
-        dark: {},
-      },
-    },
-    checkbox: {
-      colorScheme: {
-        dark: {
-          icon: {
-            checkedColor: '#000',
-          },
+      outlined: {
+        primary: {
+          color: '#fff',
+          hoverBackground: '{pink-600}',
+          borderColor: '#a3bda8',
         },
       },
     },
-    tabs: {
-      colorScheme: {
-        tab: {},
-        dark: {
-          tab: {},
-        },
+    inputtext: {
+      root: {
+        background: '#3c3c3b',
+        borderColor: '#a3bda8',
+        focusBorderColor: '#dacaaa',
       },
     },
-    dataTable: {
-      borderRadius: '2rem',
+    textarea: {
+      root: {
+        background: '#3c3c3b',
+        borderColor: '#a3bda8',
+        focusBorderColor: '#dacaaa',
+      },
     },
-    dialog: {
-      colorScheme: {
-        dark: {},
+    floatlabel: {
+      root: {
+        color: '#b07156',
+        focusColor: '#dacaaa',
+      },
+      on: {
+        active: {
+          background: '#3c3c3b',
+        },
       },
     },
   },
