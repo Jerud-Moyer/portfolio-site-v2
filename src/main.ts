@@ -3,7 +3,6 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
-// @ts-ignore
 import primeTheme from './theme'
 
 import App from './App.vue'

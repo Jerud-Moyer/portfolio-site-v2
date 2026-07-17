@@ -25,6 +25,7 @@
   --color-carbon: #22201f;
 
   /* animations */
+  --animate-fade-in: fade-in 0.5s ease;
   --animate-drop-bounce: drop-bounce 1s ease;
   --animate-say-hello: say-hello 4s ease-in-out;
 
@@ -34,4 +35,12 @@
   --font-crimson-text-semi-bold: 'CrimsonText-SemiBold', serif;
   --font-montserrat: 'Montserrat', sans-serif;
   --font-inconsolata: 'Inconsolata', sans-serif;
+}
+
+a {
+  @apply text-lemon-chiffon hover:text-muted-teal font-montserrat transition-colors duration-100;
+}
+
+p {
+  
 }
