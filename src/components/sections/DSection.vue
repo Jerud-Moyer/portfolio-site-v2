@@ -4,6 +4,7 @@ import type { ScrollMonitor } from '@/types'
 import { computed, inject } from 'vue'
 import ProjectCard from '../ProjectCard.vue'
 import { projects } from '@/assets/data/projects.js'
+import { useScrollCrossProgress } from '@/composables/useScrollCrossProgress.ts'
 
 const scrollMonitor = inject<ScrollMonitor>('scroll-monitor')
 const headerHeight = computed(() => scrollMonitor?.headerHeight.value)
@@ -19,9 +20,20 @@ const projectsTranslateX = computed(() => {
 const opacity = computed<number>(() => {
   const progress = scrollMonitor?.getProgress('d') ?? 0
   // 0→0.7: fade in (0 to 1), 0.7→1: fade out (1 to 0)
-  if (progress <= 0.5) return smoothstep(progress * 2)
+  if (progress <= 0.7) return smoothstep(progress * 4)
   return smoothstep((1 - progress) * 2)
 })
+
+const { setRef, progress: cardProgress } = useScrollCrossProgress(scrollMonitor!.viewportWidth)
+
+const cardRotateY = (index: number) => {
+  const p = smoothstep(cardProgress.value[index] ?? 0)
+  return lerp(-90, 0, p)
+}
+
+const cardOpacity = (index: number) => {
+  return smoothstep(cardProgress.value[index] ?? 0)
+}
 </script>
 
 <template>
@@ -34,20 +46,33 @@ const opacity = computed<number>(() => {
         transform: `translate(${projectsTranslateX}, -50%)`,
       }"
     >
-      <p class="text-5xl text-cinnamon font-inconsolata pl-8" :style="{ opacity }">
+      <p class="text-5xl text-cinnamon text-right font-inconsolata pl-8" :style="{ opacity }">
         some fun projects
       </p>
       <div class="flex flex-row gap-8">
-        <ProjectCard
-          v-for="project in projects"
+        <div
+          v-for="(project, index) in projects"
           :key="project.title"
-          :title="project.title"
-          :description="project.description"
-          :technologies="project.technologies"
-          :projectUrl="project.projectUrl"
-          :gitUrl="project.gitUrl"
-          :imgFileName="`/images/${project.imgFileName}`"
-        />
+          :ref="(el) => setRef(el as Element | null, index)"
+        >
+          <!-- inner div: carries the actual flip transform/opacity -->
+          <div
+            class="transform-3d"
+            :style="{
+              transform: `perspective(1000px) rotateY(${cardRotateY(index)}deg)`,
+              opacity: cardOpacity(index),
+            }"
+          >
+            <ProjectCard
+              :title="project.title"
+              :description="project.description"
+              :technologies="project.technologies"
+              :projectUrl="project.projectUrl"
+              :gitUrl="project.gitUrl"
+              :imgFileName="`/images/${project.imgFileName}`"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

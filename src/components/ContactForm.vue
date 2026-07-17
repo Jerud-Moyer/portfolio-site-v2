@@ -13,7 +13,7 @@ const formOpacity = computed(() => (props.formRevealed ? '1' : '0'))
 
 <template>
   <div
-    class="glass relative w-[50vw] h-[50vh] rounded-4xl bg-white/5 backdrop-blur-lg backdrop-brightness-85 p-4"
+    class="glass relative w-[50vw] rounded-4xl bg-white/5 backdrop-blur-lg backdrop-brightness-85 p-4"
     :style="{
       opacity: formOpacity,
       transition: 'opacity 300ms ease',
@@ -44,7 +44,7 @@ const formOpacity = computed(() => (props.formRevealed ? '1' : '0'))
           <Button
             label="Submit"
             variant="outlined"
-            severity="primary"
+            severity="secondary"
             class="shadow-md shadow-gunmetal"
           />
         </div>

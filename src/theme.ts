@@ -1,6 +1,6 @@
 import { definePreset } from '@primeuix/themes'
 import Material from '@primeuix/themes/material'
-
+// import Aura from '@primeuix/themes/aura'
 // THIS THEME IS FOR PRIMEVUE COMPONENTS
 export default definePreset(Material, {
   semantic: {
@@ -18,6 +18,12 @@ export default definePreset(Material, {
           800: '#365946',
           900: '#365946',
           950: '#365946',
+        },
+        secondary: {
+          300: '#E7E7C5',
+          400: '#E1E1B7',
+          500: '#7C7C79',
+          600: '#71716F',
         },
         surface: {
           0: '#ffffff',
@@ -52,13 +58,33 @@ export default definePreset(Material, {
       },
     },
     button: {
-      outlined: {
-        primary: {
-          color: '#fff',
-          hoverBackground: '{pink-600}',
-          borderColor: '#a3bda8',
+      colorScheme: {
+        dark: {
+          outlined: {
+            primary: {
+              color: '{sky.400}',
+              hoverBackground: '{pink.600}',
+              borderColor: '#a3bda8',
+            },
+            secondary: {
+              color: '#b7c7cd',
+              borderColor: '#a3bda8',
+            },
+          },
         },
       },
+      // outlined: {
+      //   primary: {
+      //     color: '{sky.400}', // why wont this work?
+      //     hoverBackground: '{pink-600}',
+      //     borderColor: '#a3bda8',
+      //   },
+      //   secondary: {
+      //     color: '{sky.400}', // why wont this work?
+      //     hoverBackground: '{pink.600}',
+      //     borderColor: '#ffffff',
+      //   },
+      // },
     },
     inputtext: {
       root: {
