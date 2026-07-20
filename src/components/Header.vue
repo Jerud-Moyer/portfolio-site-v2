@@ -70,12 +70,12 @@ watch(
         :width="logoWidth"
         class="animate-drop-bounce"
       />
-      <p
+      <!-- <p
         v-if="headerStillLarge && !helloSeen"
         class="animate-say-hello text-8xl font-crimson-text-semi-bold text-jungle-teal text-shadow-sm text-shadow-gunmetal absolute bottom-12 -right-[50%]"
       >
         Hello!
-      </p>
+      </p> -->
     </div>
   </div>
 </template>

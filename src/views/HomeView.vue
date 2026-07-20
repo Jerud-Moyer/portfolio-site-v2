@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Dots from '@/components/Dots.vue'
 import Header from '@/components/Header.vue'
 import ASection from '@/components/sections/ASection.vue'
 import BSection from '@/components/sections/BSection.vue'
@@ -59,6 +60,13 @@ const inZoneE = computed<boolean>(() => {
     (scrollY?.value ?? 0) < (sectionBreaks?.value.e.end ?? 0)
   )
 })
+
+const showDots = computed<boolean>(() => {
+  return (
+    (scrollY?.value ?? 0) > (sectionBreaks?.value.b.start ?? 0) &&
+    (scrollY?.value ?? 0) < (sectionBreaks?.value.d.end ?? 0)
+  )
+})
 </script>
 
 <template>
@@ -68,6 +76,19 @@ const inZoneE = computed<boolean>(() => {
     :style="{ minHeight: totalScrollHeightVh }"
   >
     <Header class="fixed top-0 left-0" />
+
+    <transition
+      enter-active-class="transition-opacity duration-300 ease-in"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div v-show="showDots" class="duration-300 ease-in">
+        <Dots />
+      </div>
+    </transition>
 
     <SectionContainer :in-scroll-zone="inZoneA">
       <ASection />

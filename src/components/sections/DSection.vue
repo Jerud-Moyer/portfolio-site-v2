@@ -51,7 +51,7 @@ const cardOpacity = (index: number) => {
       </p>
       <div class="flex flex-row gap-8">
         <div
-          v-for="(project, index) in projects"
+          v-for="(project, index) in projects.fun"
           :key="project.title"
           :ref="(el) => setRef(el as Element | null, index)"
         >

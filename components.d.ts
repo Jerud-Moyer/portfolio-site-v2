@@ -17,6 +17,7 @@ declare module 'vue' {
     CircleDeco: typeof import('./src/components/CircleDeco.vue')['default']
     ContactForm: typeof import('./src/components/ContactForm.vue')['default']
     CSection: typeof import('./src/components/sections/CSection.vue')['default']
+    Dots: typeof import('./src/components/Dots.vue')['default']
     DSection: typeof import('./src/components/sections/DSection.vue')['default']
     ESection: typeof import('./src/components/sections/ESection.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
