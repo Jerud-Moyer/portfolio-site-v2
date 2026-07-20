@@ -52,8 +52,8 @@ const technologiesString = computed<string>(() => {
       width: `${props.width}vw`,
     }"
   >
-    <img class="w-full rounded-t-lg" :src="props.imgFileName" />
-    <div class="p-3 flex grow border flex-col justify-between">
+    <img class="w-full rounded-t-lg h-[55%] object-cover" :src="props.imgFileName" />
+    <div class="p-3 flex grow border-t border-jungle-teal flex-col justify-between">
       <p class="text-4xl font-inconsolata text-jungle-teal">
         {{ props.title }}
       </p>
@@ -62,8 +62,8 @@ const technologiesString = computed<string>(() => {
       </p>
       <p class="text-lg font-montserrat text-jungle-teal">{{ technologiesString }}</p>
       <div class="flex justify-between p-2">
-        <a :href="props.projectUrl">{{ props.title }}</a>
-        <a :href="props.gitUrl">view the code</a>
+        <a :href="props.projectUrl" target="_blank">{{ props.title }}</a>
+        <a :href="props.gitUrl" target="_blank">view the code</a>
       </div>
     </div>
   </div>

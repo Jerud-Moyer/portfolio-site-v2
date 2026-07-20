@@ -49,7 +49,7 @@ const cardOpacity = (index: number) => {
       <div class="flex flex-row gap-8">
         <!-- outer wrapper: NO transform, so getBoundingClientRect on it is always accurate -->
         <div
-          v-for="(project, index) in projects"
+          v-for="(project, index) in projects.websites"
           :key="project.title"
           :ref="(el) => setRef(el as Element | null, index)"
         >
@@ -76,6 +76,4 @@ const cardOpacity = (index: number) => {
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
