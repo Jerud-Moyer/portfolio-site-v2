@@ -20,7 +20,7 @@ const projectsTranslateX = computed(() => {
 const opacity = computed<number>(() => {
   const progress = scrollMonitor?.getProgress('d') ?? 0
   // 0→0.7: fade in (0 to 1), 0.7→1: fade out (1 to 0)
-  if (progress <= 0.7) return smoothstep(progress * 4)
+  if (progress <= 0.3) return smoothstep(progress * 5)
   return smoothstep((1 - progress) * 2)
 })
 
@@ -46,7 +46,7 @@ const cardOpacity = (index: number) => {
         transform: `translate(${projectsTranslateX}, -50%)`,
       }"
     >
-      <p class="text-5xl text-cinnamon text-right font-inconsolata pl-8" :style="{ opacity }">
+      <p class="text-5xl text-cinnamon text-right font-inconsolata pr-8" :style="{ opacity }">
         some fun projects
       </p>
       <div class="flex flex-row gap-8">

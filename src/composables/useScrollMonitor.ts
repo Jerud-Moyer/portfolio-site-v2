@@ -12,9 +12,12 @@ export const TARGET_HEADER_HEIGHT = 86
 export const SCROLL_SECTION_BREAKS_VH = {
   a: { start: 0, end: 4 },
   b: { start: 3.5, end: 10 },
-  c: { start: 9.5, end: 15 },
-  d: { start: 14.5, end: 20 },
-  e: { start: 18, end: 40 },
+  c: { start: 9.5, end: 19.5 },
+  d: { start: 14, end: 24 },
+  // c: { start: 9.5, end: 15 },
+  // d: { start: 14.5, end: 20 },
+  // e: { start: 18, end: 40 },
+  e: { start: 20, end: 41 },
 } as const
 
 // Total scroll length of the page, in vh multiples. Keep this at exactly

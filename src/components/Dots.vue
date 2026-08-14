@@ -1,3 +1,4 @@
+// eslint-disable-next-line vue/multi-word-component-names
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import CircleDeco from './CircleDeco.vue'
@@ -42,7 +43,6 @@ const spacedRandom = (count: number, min = 5, max = 95): number[] => {
 const startingXPositions = spacedRandom(NUMBER_OF_DOTS) // vw values
 const startingYPositions = spacedRandom(NUMBER_OF_DOTS) // vh values
 
-// readonly here is the fix for your original error —
 // `as const` arrays can't be passed to a mutable unknown[]
 const _randomIndex = (array: readonly unknown[]) => Math.floor(Math.random() * array.length)
 const _randomTransVal = () => Math.floor(Math.random() * 10) + 1
@@ -88,13 +88,11 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    if(timeOutRef.value) {
-        clearInterval(timeOutRef.value)
-        timeOutRef.value = null
-    }
+  if (timeOutRef.value) {
+    clearInterval(timeOutRef.value)
+    timeOutRef.value = null
+  }
 })
-
-// const dots = reactive<Dot[]>(Array.from({ length: NUMBER_OF_DOTS }, () => dotify()))
 </script>
 
 <template>
@@ -109,6 +107,6 @@ onUnmounted(() => {
       transform: `translate(${dot.xOperator}${dot.xTranslate}vh, ${dot.yOperator}${dot.yTranslate}vw)`,
     }"
   >
-    <CircleDeco :dot="dot" :width="dot.width" :fill-color="dot.color" />
+    <CircleDeco :width="dot.width" :fill-color="dot.color" />
   </div>
 </template>
