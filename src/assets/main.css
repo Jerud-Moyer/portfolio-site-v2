@@ -26,6 +26,8 @@
 
   /* animations */
   --animate-fade-in: fade-in 0.5s ease;
+  --animate-fade-in-slow: fade-in 0.75s ease;
+  --animate-fade-in-slower: fade-in 1.25s ease;
   --animate-drop-bounce: drop-bounce 1s ease;
   --animate-say-hello: say-hello 4s ease-in-out;
 

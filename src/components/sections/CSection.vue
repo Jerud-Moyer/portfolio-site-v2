@@ -19,7 +19,7 @@ const projectsTranslateX = computed(() => {
 
 const opacity = computed<number>(() => {
   const progress = scrollMonitor?.getProgress('c') ?? 0
-  if (progress <= 0.7) return smoothstep(progress * 4)
+  if (progress <= 0.7) return smoothstep(progress * 5)
   return smoothstep((1 - progress) * 2)
 })
 

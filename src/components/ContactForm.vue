@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { useEmailService, type Email } from '@/composables/useEmailService'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   formRevealed: {
@@ -8,7 +9,61 @@ const props = defineProps({
   },
 })
 
+const emailService = useEmailService()
+
 const formOpacity = computed(() => (props.formRevealed ? '1' : '0'))
+
+const name = ref<string>('')
+const email = ref<string>('')
+const message = ref<string>('')
+const feedBack = ref<string>('')
+const showFeedback = ref<boolean>(false)
+const encounteredError = ref<boolean>(false)
+
+const userInput = computed<Partial<Email>>(() => ({
+  name: name.value,
+  senderEmail: email.value,
+  message: message.value,
+}))
+
+const clearForm = () => {
+  name.value = ''
+  email.value = ''
+  message.value = ''
+}
+
+const canSubmit = computed(
+  () =>
+    name.value.trim().length > 0 &&
+    email.value.trim().length > 0 &&
+    message.value.trim().length > 0,
+)
+
+const handleSendEmail = async () => {
+  showFeedback.value = false
+  encounteredError.value = false
+
+  if (!canSubmit.value) {
+    feedBack.value = 'please fill out all fields'
+    showFeedback.value = true
+    encounteredError.value = true
+    return
+  }
+
+  try {
+    const res = await emailService.sendMessage(userInput.value)
+    if (res.status && res.status === 'success') {
+      clearForm()
+      feedBack.value = 'Thank you!'
+    }
+  } catch (err) {
+    console.error(err)
+    encounteredError.value = true
+    feedBack.value = 'There was a problem sending your message, please try again.'
+  } finally {
+    showFeedback.value = true
+  }
+}
 </script>
 
 <template>
@@ -27,17 +82,17 @@ const formOpacity = computed(() => (props.formRevealed ? '1' : '0'))
         <div class="flex flex-row justify-between w-full gap-8 p-8">
           <FloatLabel variant="on" class="w-1/2 shadow-md shadow-gunmetal">
             <label>Your Name</label>
-            <InputText class="w-full" />
+            <InputText class="w-full" v-model="name" />
           </FloatLabel>
           <FloatLabel variant="on" class="w-1/2 shadow-md shadow-gunmetal">
             <label>Your Email</label>
-            <InputText class="w-full" />
+            <InputText class="w-full" v-model="email" />
           </FloatLabel>
         </div>
         <div class="flex w-full px-8">
           <FloatLabel variant="on" class="w-full">
             <label>Your Message</label>
-            <TextArea :rows="7" class="w-full shadow-md shadow-gunmetal" />
+            <TextArea :rows="7" class="w-full shadow-md shadow-gunmetal" v-model="message" />
           </FloatLabel>
         </div>
         <div class="p-8 flex justify-end">
@@ -46,10 +101,18 @@ const formOpacity = computed(() => (props.formRevealed ? '1' : '0'))
             variant="outlined"
             severity="secondary"
             class="shadow-md shadow-gunmetal"
+            @click="handleSendEmail()"
           />
         </div>
       </div>
     </div>
+    <p
+      class="absolute animate-fade-in bottom-8 left-1/2 -translate-x-1/2 text-4xl font-montserrat font-bold text-center text-shadow-sm text-shadow-lemon-chiffon"
+      :class="encounteredError ? 'text-red-800' : 'text-graphite'"
+      v-if="showFeedback"
+    >
+      {{ feedBack }}
+    </p>
   </div>
 </template>
 
