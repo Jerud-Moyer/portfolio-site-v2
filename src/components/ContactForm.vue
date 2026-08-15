@@ -68,7 +68,7 @@ const handleSendEmail = async () => {
 
 <template>
   <div
-    class="glass relative w-[50vw] rounded-4xl bg-white/5 backdrop-blur-lg backdrop-brightness-85 p-4"
+    class="glass relative w-[90vw] sm:w-[50vw] rounded-4xl bg-white/5 backdrop-blur-lg backdrop-brightness-85 p-4"
     :style="{
       opacity: formOpacity,
       transition: 'opacity 300ms ease',
@@ -79,12 +79,12 @@ const handleSendEmail = async () => {
         Contact Me
       </p>
       <div class="flex flex-col grow justify-around">
-        <div class="flex flex-row justify-between w-full gap-8 p-8">
-          <FloatLabel variant="on" class="w-1/2 shadow-md shadow-gunmetal">
+        <div class="flex flex-col md:flex-row justify-between w-full gap-8 p-8">
+          <FloatLabel variant="on" class="md:w-1/2 shadow-md shadow-gunmetal">
             <label>Your Name</label>
             <InputText class="w-full" v-model="name" />
           </FloatLabel>
-          <FloatLabel variant="on" class="w-1/2 shadow-md shadow-gunmetal">
+          <FloatLabel variant="on" class="md:w-1/2 shadow-md shadow-gunmetal">
             <label>Your Email</label>
             <InputText class="w-full" v-model="email" />
           </FloatLabel>

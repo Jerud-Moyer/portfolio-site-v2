@@ -2,10 +2,6 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  width: {
-    type: Number,
-    default: 40, // num in VW
-  },
   title: {
     type: String,
     default: '',
@@ -47,10 +43,7 @@ const technologiesString = computed<string>(() => {
 
 <template>
   <div
-    class="aspect-square flex flex-col border-2 border-jungle-teal rounded-lg bg-carbon max-w-[60vh]"
-    :style="{
-      width: `${props.width}vw`,
-    }"
+    class="aspect-square flex flex-col border-2 border-jungle-teal rounded-lg bg-carbon w-[80vw] sm:w-[40vw] max-w-[80vw] sm:max-w-[60vh]"
   >
     <img class="w-full rounded-t-lg h-[55%] object-cover" :src="props.imgFileName" />
     <div class="p-3 flex grow border-t border-jungle-teal flex-col justify-between">
