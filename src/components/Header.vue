@@ -71,7 +71,7 @@ watch(
 
 <template>
   <div
-    class="w-full h-200 flex items-end px-24 py-2 z-10"
+    class="w-full h-200 flex items-end px-4 sm:px-24 py-2 z-10"
     :class="backgroundColor"
     :style="{
       height: headerHeight + 'px',
