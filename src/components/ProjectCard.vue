@@ -43,17 +43,24 @@ const technologiesString = computed<string>(() => {
 
 <template>
   <div
-    class="aspect-square flex flex-col border-2 border-jungle-teal rounded-lg bg-carbon w-[80vw] sm:w-[40vw] max-w-[80vw] sm:max-w-[60vh]"
+    class="aspect-square min-h-fit grow flex flex-col border-2 border-jungle-teal rounded-lg bg-carbon w-[90vw] sm:w-[40vw] max-w-[80vw] sm:max-w-[60vh]"
   >
-    <img class="w-full rounded-t-lg h-[55%] object-cover" :src="props.imgFileName" />
+    <img
+      class="w-full rounded-t-lg object-cover h-[45%] sm:h-[55%] shrink-0"
+      :src="props.imgFileName"
+    />
+    <!-- <img
+      class="w-full rounded-t-lg aspect-[16/10] shrink-0 object-cover"
+      :src="props.imgFileName"
+    /> -->
     <div class="p-3 flex grow border-t border-jungle-teal flex-col justify-between">
-      <p class="text-4xl font-inconsolata text-jungle-teal">
+      <p class="text-2xl sm:text-4xl font-inconsolata text-jungle-teal">
         {{ props.title }}
       </p>
-      <p class="text-md font-montserrat text-muted-teal p-2">
+      <p class="text-sm sm:text-md font-montserrat text-muted-teal p-2">
         {{ props.description }}
       </p>
-      <p class="text-lg font-montserrat text-jungle-teal">{{ technologiesString }}</p>
+      <p class="text-md sm:text-lg font-montserrat text-jungle-teal">{{ technologiesString }}</p>
       <div class="flex justify-between p-2">
         <a :href="props.projectUrl" target="_blank">{{ props.title }}</a>
         <a :href="props.gitUrl" target="_blank">view the code</a>

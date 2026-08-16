@@ -42,7 +42,7 @@ const pastColorThreshold = computed(() => (scrollY?.value ?? 0) >= (vh?.value ??
       :class="pastColorThreshold ? 'text-lt-grey' : 'text-cinnamon'"
       :style="{
         top: '0',
-        transition: 'color 300ms, transform 100ms',
+        transition: 'color 300ms 100ms',
         transform: `translateX(-50%) translateY(${textTranslateY})`,
       }"
     >
@@ -53,7 +53,7 @@ const pastColorThreshold = computed(() => (scrollY?.value ?? 0) >= (vh?.value ??
       id="circle_a"
       :width="600"
       fillColor="#417b5a"
-      class="fixed -right-[30vw] transition-all duration-100"
+      class="fixed -right-[30vw]"
       :style="{
         top: '35vh',
         transform: `translateX(${circleOneTranslateX}) translateY(${circleOneTranslateY})`,
@@ -64,7 +64,7 @@ const pastColorThreshold = computed(() => (scrollY?.value ?? 0) >= (vh?.value ??
       :width="150"
       fillColor="#b07156"
       outlineColor="#3c3c3b"
-      class="fixed top-[72vh] -right-[40vw] transition-all duration-100"
+      class="fixed top-[72vh] -right-[40vw]"
       :style="{
         top: '34vh',
         transform: `translateX(${circleTwoTranslateX}) translateY(${circleTwoTranslateY})`,

@@ -13,29 +13,28 @@ const helloSeen = ref<boolean>(false)
 
 const headerHeight = scrollMonitor?.headerHeight
 
-const initialLogoWidth = scrollMonitor?.INITIAL_LOGO_WIDTH ?? 0
-const targetHeaderHeight = scrollMonitor?.TARGET_HEADER_HEIGHT ?? 0
+const targetHeaderHeight = scrollMonitor?.targetHeaderHeight
+const headerCollapsed = computed<boolean>(() => headerHeight?.value === targetHeaderHeight?.value)
 
-const headerCollapsed = computed<boolean>(() => headerHeight?.value === targetHeaderHeight)
-
-const logoWidth = computed(() => {
-  const adjustedWidth = initialLogoWidth - (scrollMonitor?.scrollY.value ?? 0) / 2
-  if (adjustedWidth <= 85) return 85
-  return adjustedWidth
-})
+const logoWidth = scrollMonitor?.logoWidth
+// const logoWidth = computed(() => {
+//   const adjustedWidth = initialLogoWidth?.value ?? 0 - (scrollMonitor?.scrollY.value ?? 0) / 2
+//   if (adjustedWidth <= 85) return 85
+//   return adjustedWidth
+// })
 
 const backgroundColor = computed(() => {
   if (headerHeight?.value) {
-    if (headerHeight?.value <= targetHeaderHeight + 100) {
+    if (headerHeight?.value <= (targetHeaderHeight?.value ?? 0) + 100) {
       return 'bg-carbon'
     }
-    if (headerHeight?.value <= targetHeaderHeight + 200) {
+    if (headerHeight?.value <= (targetHeaderHeight?.value ?? 0) + 200) {
       return 'bg-gunmetal'
     }
-    if (headerHeight?.value <= targetHeaderHeight + 300) {
+    if (headerHeight?.value <= (targetHeaderHeight?.value ?? 0) + 300) {
       return 'bg-md-grey'
     }
-    if (headerHeight?.value <= targetHeaderHeight + 500) {
+    if (headerHeight?.value <= (targetHeaderHeight?.value ?? 0) + 500) {
       return 'bg-lt-grey'
     }
   }
@@ -61,7 +60,6 @@ const headerIcons = [
 watch(
   () => headerHeight?.value,
   (newVal) => {
-    console.log('IN HEADER => ', newVal)
     if (newVal && newVal < 400) {
       helloSeen.value = true
     }
@@ -75,7 +73,7 @@ watch(
     :class="backgroundColor"
     :style="{
       height: headerHeight + 'px',
-      transition: 'height 100ms, background-color 400ms',
+      transition: 'background-color 400ms',
     }"
   >
     <div class="relative flex flex-row justify-between items-center w-full">

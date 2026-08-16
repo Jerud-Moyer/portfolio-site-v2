@@ -38,7 +38,7 @@ const gradientBackFillId = computed(() => `gradientBackFill-${uid}`)
 </script>
 
 <template>
-  <div class="transition-all duration-75" :style="{ width: width + 'px' }">
+  <div class="" :style="{ width: width + 'px' }">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="100%"
