@@ -65,7 +65,6 @@ const showForm = computed(() => circle6Scale.value == 1)
       :style="{
         top: halfPlusHeader,
         transform: `translate(-50%, -50%) scale(${circle1Scale}) `,
-        transition: 'transform 200ms',
       }"
     />
     <CircleDeco
@@ -75,7 +74,6 @@ const showForm = computed(() => circle6Scale.value == 1)
       :style="{
         top: halfPlusHeader,
         transform: `translate(-50%, -50%) scale(${circle2Scale}) `,
-        transition: 'transform 200ms',
       }"
     />
     <CircleDeco
@@ -85,7 +83,6 @@ const showForm = computed(() => circle6Scale.value == 1)
       :style="{
         top: halfPlusHeader,
         transform: `translate(-50%, -50%) scale(${circle3Scale}) `,
-        transition: 'transform 200ms',
       }"
     />
     <CircleDeco
@@ -95,7 +92,6 @@ const showForm = computed(() => circle6Scale.value == 1)
       :style="{
         top: halfPlusHeader,
         transform: `translate(-50%, -50%) scale(${circle4Scale}) `,
-        transition: 'transform 200ms',
       }"
     />
     <CircleDeco
@@ -105,7 +101,6 @@ const showForm = computed(() => circle6Scale.value == 1)
       :style="{
         top: halfPlusHeader,
         transform: `translate(-50%, -50%) scale(${circle5Scale}) `,
-        transition: 'transform 200ms',
       }"
     />
     <CircleDeco
@@ -115,7 +110,6 @@ const showForm = computed(() => circle6Scale.value == 1)
       :style="{
         top: halfPlusHeader,
         transform: `translate(-50%, -50%) scale(${circle6Scale}) `,
-        transition: 'transform 200ms',
       }"
     />
     <div
@@ -130,7 +124,6 @@ const showForm = computed(() => circle6Scale.value == 1)
     </div>
   </div>
 </template>
-
 
 <!-- <script setup lang="ts">
 import { computed, inject } from 'vue'

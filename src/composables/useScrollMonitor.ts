@@ -1,30 +1,85 @@
-import type { SectionId } from '@/types'
+import { SECTION_IDS, type SectionId, type SectionRange, type ViewportProfile } from '@/types'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 
-export const INITIAL_LOGO_WIDTH = 360
-export const INITIAL_HEADER_HEIGHT = 600
-export const TARGET_HEADER_HEIGHT = 86
+/**
+ * Each section declares how long it runs (in viewport-heights of scroll)
+ * and how far it starts *before* the previous section ends. Starts are
+ * derived by accumulation, so retuning one section shifts everything after
+ * it automatically instead of requiring hand-edited absolute values.
+ *
+ * Chain order comes from SECTION_IDS, not from the key order here.
+ */
+export type SectionTiming = { duration: number; overlap: number }
 
-// Expressed as multiples of viewport height (vh), not raw pixels.
-// Keeps every section's scroll range proportional to the current viewport,
-// so the final section's animations always finish right at the bottom of
-// the page — no matter how tall or short the window is.
-export const SCROLL_SECTION_BREAKS_VH = {
-  a: { start: 0, end: 4 },
-  b: { start: 3.5, end: 10 },
-  c: { start: 9.5, end: 19.5 },
-  d: { start: 14, end: 24 },
-  // c: { start: 9.5, end: 15 },
-  // d: { start: 14.5, end: 20 },
-  // e: { start: 18, end: 40 },
-  e: { start: 20, end: 41 },
-} as const
+export const SECTION_TIMELINES: Record<ViewportProfile, Record<SectionId, SectionTiming>> = {
+  // Reproduces the original absolute table exactly:
+  // a 0→4, b 3.5→10, c 9.5→19.5, d 14→24, e 20→41.
+  desktop: {
+    a: { duration: 4, overlap: 0 },
+    b: { duration: 6.5, overlap: 0.5 },
+    c: { duration: 10, overlap: 0.5 },
+    d: { duration: 10, overlap: 5.5 },
+    e: { duration: 21, overlap: 4 },
+  },
+  tablet: {
+    a: { duration: 3.5, overlap: 0 },
+    b: { duration: 5.5, overlap: 0.5 },
+    c: { duration: 8, overlap: 0.5 },
+    d: { duration: 8, overlap: 4 },
+    e: { duration: 16, overlap: 3 },
+  },
+  // Starting point only — shorter durations (a phone screen of scroll is
+  // ~2 thumb swipes) and reduced overlap (two sections sharing a narrow
+  // screen reads as clutter, not crossfade).
+  mobile: {
+    a: { duration: 2.5, overlap: 0 },
+    b: { duration: 4, overlap: 0.4 },
+    c: { duration: 6.5, overlap: 0.4 },
+    d: { duration: 6.5, overlap: 2 },
+    e: { duration: 11, overlap: 1.5 },
+  },
+}
 
-// Total scroll length of the page, in vh multiples. Keep this at exactly
-// (last section's end) so max scrollY lines up with section e's end in px.
-export const TOTAL_SCROLL_VH = SCROLL_SECTION_BREAKS_VH.e.end
+export const HEADER_PROFILES: Record<
+  ViewportProfile,
+  {
+    logoWidth: number
+    logoTargetWidth: number
+    initialHeight: number
+    targetHeight: number
+    collapseVh: number
+  }
+> = {
+  // Targets are the start width scaled by targetHeight/initialHeight, which
+  // reproduces a logo that shrank proportionally with the header.
+  desktop: {
+    logoWidth: 360,
+    logoTargetWidth: 84,
+    initialHeight: 600,
+    targetHeight: 86,
+    collapseVh: 0.5,
+  },
+  tablet: {
+    logoWidth: 300,
+    logoTargetWidth: 48,
+    initialHeight: 480,
+    targetHeight: 76,
+    collapseVh: 0.5,
+  },
+  mobile: {
+    logoWidth: 200,
+    logoTargetWidth: 42,
+    initialHeight: 300,
+    targetHeight: 64,
+    collapseVh: 0.45,
+  },
+}
+
+export const MOBILE_MAX_WIDTH = 640
+export const TABLET_MAX_WIDTH = 1024
 
 export function getSectionProgress(scrollY: number, start: number, end: number): number {
+  if (end <= start) return scrollY >= end ? 1 : 0
   const progress = (scrollY - start) / (end - start)
   return Math.min(Math.max(progress, 0), 1)
 }
@@ -39,6 +94,38 @@ export const smoothstep = (t: number) => {
   return t * t * (3 - 2 * t)
 }
 
+/** Accumulate duration/overlap pairs into absolute vh-multiple ranges. */
+function buildTimeline(timing: Record<SectionId, SectionTiming>) {
+  const breaks = {} as Record<SectionId, SectionRange>
+  let cursor = 0
+  for (const id of SECTION_IDS) {
+    const { duration, overlap } = timing[id]
+    const start = Math.max(0, cursor - overlap)
+    const end = start + duration
+    breaks[id] = { start, end }
+    cursor = end
+  }
+  return { breaks, total: cursor }
+}
+
+/**
+ * Measures 100svh via a throwaway probe element. Unlike window.innerHeight,
+ * the small-viewport unit does NOT change when the mobile URL bar shows or
+ * hides — which is what keeps the timeline from shifting mid-scroll.
+ */
+function measureStableViewportHeight(): number {
+  if (typeof CSS !== 'undefined' && CSS.supports?.('height', '100svh')) {
+    const probe = document.createElement('div')
+    probe.style.cssText =
+      'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none'
+    document.body.appendChild(probe)
+    const height = probe.getBoundingClientRect().height
+    probe.remove()
+    if (height > 0) return height
+  }
+  return window.innerHeight
+}
+
 export function useScrollMonitor() {
   const scrollY = ref<number>(0)
   const headerLocked = ref<boolean>(false)
@@ -49,50 +136,66 @@ export function useScrollMonitor() {
     headerLocked.value = bool
   }
 
-  const _throttle = <T extends unknown[]>(callback: (...args: T) => void, ms: number) => {
-    let wait = false
-    return function (...args: T) {
-      if (!wait) {
-        callback(...args)
-        wait = true
-        setTimeout(() => {
-          wait = false
-        }, ms)
-      }
-    }
+  // rAF-coalesced: never stale, never more than one write per frame.
+  let scrollQueued = false
+  const onScroll = () => {
+    if (scrollQueued) return
+    scrollQueued = true
+    requestAnimationFrame(() => {
+      scrollY.value = window.scrollY
+      scrollQueued = false
+    })
   }
 
-  const throttledScroll = _throttle((_e: Event) => {
-    scrollY.value = window.scrollY
-  }, 50)
-
-  const throttledResize = _throttle(() => {
-    viewportWidth.value = window.innerWidth
-    viewportHeight.value = window.innerHeight
-  }, 100)
+  let resizeQueued = false
+  const onResize = () => {
+    if (resizeQueued) return
+    resizeQueued = true
+    requestAnimationFrame(() => {
+      resizeQueued = false
+      const nextWidth = window.innerWidth
+      const nextHeight = measureStableViewportHeight()
+      // svh is URL-bar-stable, so any change here is a genuine resize
+      // or orientation change and should rebuild the timeline.
+      if (nextWidth !== viewportWidth.value) viewportWidth.value = nextWidth
+      if (Math.abs(nextHeight - viewportHeight.value) > 1) viewportHeight.value = nextHeight
+    })
+  }
 
   onMounted(() => {
-    window.addEventListener('scroll', throttledScroll)
-    window.addEventListener('resize', throttledResize)
+    viewportHeight.value = measureStableViewportHeight()
+    scrollY.value = window.scrollY
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    window.addEventListener('orientationchange', onResize)
   })
+
   onUnmounted(() => {
-    window.removeEventListener('scroll', throttledScroll)
-    window.removeEventListener('resize', throttledResize)
+    window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', onResize)
+    window.removeEventListener('orientationchange', onResize)
   })
 
-  const headerHeight = computed(() => {
-    const adjustedHeight = INITIAL_HEADER_HEIGHT - (scrollY.value ?? 0)
-    return adjustedHeight <= TARGET_HEADER_HEIGHT ? TARGET_HEADER_HEIGHT : adjustedHeight
+  const profile = computed<ViewportProfile>(() => {
+    if (viewportWidth.value <= MOBILE_MAX_WIDTH) return 'mobile'
+    if (viewportWidth.value <= TABLET_MAX_WIDTH) return 'tablet'
+    return 'desktop'
   })
 
-  // Reactive pixel breakpoints, derived from the vh-multiple constants and
-  // the current viewport height. Recomputes automatically on resize.
-  const sectionBreaks = computed(() => {
+  /** Portrait phones/tablets — narrow enough that content wraps taller. */
+  const isPortrait = computed(() => viewportHeight.value > viewportWidth.value)
+
+  const timeline = computed(() => buildTimeline(SECTION_TIMELINES[profile.value]))
+
+  /** vh-multiple ranges, before pixel conversion. Useful for debugging. */
+  const sectionBreaksVh = computed(() => timeline.value.breaks)
+
+  const sectionBreaks = computed<Record<SectionId, SectionRange>>(() => {
     const vh = viewportHeight.value
-    const result = {} as Record<SectionId, { start: number; end: number }>
-    for (const key of Object.keys(SCROLL_SECTION_BREAKS_VH) as SectionId[]) {
-      const { start, end } = SCROLL_SECTION_BREAKS_VH[key]
-      result[key] = { start: start * vh, end: end * vh }
+    const source = timeline.value.breaks
+    const result = {} as Record<SectionId, SectionRange>
+    for (const id of SECTION_IDS) {
+      result[id] = { start: source[id].start * vh, end: source[id].end * vh }
     }
     return result
   })
@@ -102,15 +205,58 @@ export function useScrollMonitor() {
     return getSectionProgress(scrollY.value, start, end)
   }
 
+  /**
+   * Progress across a sub-range of a section, expressed as fractions of that
+   * section's duration. Stays proportional across profiles, unlike
+   * getProgressByVh which is pinned to absolute viewport-heights.
+   */
+  const getPhaseProgress = (sectionId: SectionId, from = 0, to = 1) => {
+    const p = getProgress(sectionId)
+    if (to <= from) return p >= to ? 1 : 0
+    return Math.min(Math.max((p - from) / (to - from), 0), 1)
+  }
+
   const getProgressByVh = (sectionId: SectionId, screens = 1) => {
     const { start } = sectionBreaks.value[sectionId]
     const progress = (scrollY.value - start) / (viewportHeight.value * screens)
     return Math.min(Math.max(progress, 0), 1)
   }
 
-  // Total document height in px, matching TOTAL_SCROLL_VH exactly so that
-  // maxScrollY (docHeight - viewportHeight) lines up with section e's end.
-  const totalScrollHeightVh = computed(() => `${(TOTAL_SCROLL_VH + 1) * 100}vh`)
+  const inSection = (sectionId: SectionId) => {
+    const { start, end } = sectionBreaks.value[sectionId]
+    return scrollY.value > start && scrollY.value < end
+  }
+
+  const headerConfig = computed(() => HEADER_PROFILES[profile.value])
+  const initialHeaderHeight = computed(() => headerConfig.value.initialHeight)
+  const targetHeaderHeight = computed(() => headerConfig.value.targetHeight)
+
+  /** 0 = fully expanded, 1 = fully collapsed. Viewport-independent. */
+  const headerProgress = computed(() =>
+    getSectionProgress(scrollY.value, 0, headerConfig.value.collapseVh * viewportHeight.value),
+  )
+
+  const headerHeight = computed(() =>
+    lerp(headerConfig.value.initialHeight, headerConfig.value.targetHeight, headerProgress.value),
+  )
+
+  const initialLogoWidth = computed(() => headerConfig.value.logoWidth)
+  // const targetLogoWidth = computed(() => headerConfig.value.logoTargetWidth)
+
+  const logoWidth = computed(() =>
+    lerp(
+      headerConfig.value.logoWidth,
+      headerConfig.value.logoTargetWidth,
+      smoothstep(headerProgress.value),
+    ),
+  )
+
+  /**
+   * Document height in PIXELS, derived from the same viewportHeight the JS
+   * math uses. Must not be a vh string — CSS vh resolves against the large
+   * viewport on mobile and would desync maxScrollY from the last section's end.
+   */
+  const totalScrollHeight = computed(() => `${(timeline.value.total + 1) * viewportHeight.value}px`)
 
   return {
     scrollY,
@@ -118,14 +264,20 @@ export function useScrollMonitor() {
     setHeaderLocked,
     viewportWidth,
     viewportHeight,
-    INITIAL_LOGO_WIDTH,
-    INITIAL_HEADER_HEIGHT,
-    TARGET_HEADER_HEIGHT,
-    SCROLL_SECTION_BREAKS_VH,
+    profile,
+    isPortrait,
+    initialLogoWidth,
+    logoWidth,
+    initialHeaderHeight,
+    targetHeaderHeight,
+    headerProgress,
+    headerHeight,
+    sectionBreaksVh,
     sectionBreaks,
     getProgress,
+    getPhaseProgress,
     getProgressByVh,
-    totalScrollHeightVh,
-    headerHeight,
+    inSection,
+    totalScrollHeight,
   }
 }

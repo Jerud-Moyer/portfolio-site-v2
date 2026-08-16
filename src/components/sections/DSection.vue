@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { lerp, smoothstep } from '@/composables/useScrollMonitor'
 import type { ScrollMonitor } from '@/types'
-import { computed, inject } from 'vue'
+import { computed, ref, inject, onMounted, onUnmounted } from 'vue'
 import ProjectCard from '../ProjectCard.vue'
 import { projects } from '@/assets/data/projects.js'
 import { useScrollCrossProgress } from '@/composables/useScrollCrossProgress.ts'
@@ -12,9 +12,23 @@ const halfPlusHeader = computed<string>(
   () => `calc((100% - ${headerHeight.value}px) / 2 + ${headerHeight.value}px)`,
 )
 
+const rowEl = ref<HTMLElement | null>(null)
+const rowWidth = ref(0)
+
+onMounted(() => {
+  if (!rowEl.value) return
+  const ro = new ResizeObserver(([entry]) => {
+    rowWidth.value = entry?.contentRect.width ?? 0
+  })
+  ro.observe(rowEl.value)
+  onUnmounted(() => ro.disconnect())
+})
+
 const projectsTranslateX = computed(() => {
-  const progress = scrollMonitor?.getProgressByVh('d', 4) ?? 0
-  return `${lerp(-100, 200, progress)}vw` // starts at 100vw (off right), ends at -20vw (off left)
+  const vw = scrollMonitor?.viewportWidth.value ?? 0
+  const progress = scrollMonitor?.getPhaseProgress('d', 0, 0.4) ?? 0
+  // start: fully clear of the left edge. end: fully clear of the right edge.
+  return `${lerp(-vw, rowWidth.value, progress)}px`
 })
 
 const opacity = computed<number>(() => {
@@ -42,14 +56,13 @@ const cardOpacity = (index: number) => {
       class="flex flex-col gap-8 fixed right-0"
       :style="{
         top: halfPlusHeader,
-        transition: 'transform 200ms',
         transform: `translate(${projectsTranslateX}, -50%)`,
       }"
     >
       <p class="text-5xl text-cinnamon text-right font-inconsolata pr-8" :style="{ opacity }">
         some fun projects
       </p>
-      <div class="flex flex-row gap-8">
+      <div class="flex flex-row gap-8 items-stretch" ref="rowEl">
         <div
           v-for="(project, index) in projects.fun"
           :key="project.title"
