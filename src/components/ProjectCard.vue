@@ -49,10 +49,6 @@ const technologiesString = computed<string>(() => {
       class="w-full rounded-t-lg object-cover h-[45%] sm:h-[55%] shrink-0"
       :src="props.imgFileName"
     />
-    <!-- <img
-      class="w-full rounded-t-lg aspect-[16/10] shrink-0 object-cover"
-      :src="props.imgFileName"
-    /> -->
     <div class="p-3 flex grow border-t border-jungle-teal flex-col justify-between">
       <p class="text-2xl sm:text-4xl font-inconsolata text-jungle-teal">
         {{ props.title }}
