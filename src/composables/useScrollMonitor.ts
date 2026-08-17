@@ -126,15 +126,12 @@ function measureStableViewportHeight(): number {
   return window.innerHeight
 }
 
-export function useScrollMonitor() {
+let instance: ReturnType<typeof createScrollMonitor> | null = null
+
+function createScrollMonitor() {
   const scrollY = ref<number>(0)
-  const headerLocked = ref<boolean>(false)
   const viewportWidth = ref<number>(window.innerWidth)
   const viewportHeight = ref<number>(window.innerHeight)
-
-  const setHeaderLocked = (bool: boolean) => {
-    headerLocked.value = bool
-  }
 
   // rAF-coalesced: never stale, never more than one write per frame.
   let scrollQueued = false
@@ -182,9 +179,6 @@ export function useScrollMonitor() {
     return 'desktop'
   })
 
-  /** Portrait phones/tablets — narrow enough that content wraps taller. */
-  const isPortrait = computed(() => viewportHeight.value > viewportWidth.value)
-
   const timeline = computed(() => buildTimeline(SECTION_TIMELINES[profile.value]))
 
   /** vh-multiple ranges, before pixel conversion. Useful for debugging. */
@@ -207,19 +201,12 @@ export function useScrollMonitor() {
 
   /**
    * Progress across a sub-range of a section, expressed as fractions of that
-   * section's duration. Stays proportional across profiles, unlike
-   * getProgressByVh which is pinned to absolute viewport-heights.
+   * section's duration. Stays proportional across profiles
    */
   const getPhaseProgress = (sectionId: SectionId, from = 0, to = 1) => {
     const p = getProgress(sectionId)
     if (to <= from) return p >= to ? 1 : 0
     return Math.min(Math.max((p - from) / (to - from), 0), 1)
-  }
-
-  const getProgressByVh = (sectionId: SectionId, screens = 1) => {
-    const { start } = sectionBreaks.value[sectionId]
-    const progress = (scrollY.value - start) / (viewportHeight.value * screens)
-    return Math.min(Math.max(progress, 0), 1)
   }
 
   const inSection = (sectionId: SectionId) => {
@@ -228,7 +215,6 @@ export function useScrollMonitor() {
   }
 
   const headerConfig = computed(() => HEADER_PROFILES[profile.value])
-  const initialHeaderHeight = computed(() => headerConfig.value.initialHeight)
   const targetHeaderHeight = computed(() => headerConfig.value.targetHeight)
 
   /** 0 = fully expanded, 1 = fully collapsed. Viewport-independent. */
@@ -239,9 +225,6 @@ export function useScrollMonitor() {
   const headerHeight = computed(() =>
     lerp(headerConfig.value.initialHeight, headerConfig.value.targetHeight, headerProgress.value),
   )
-
-  const initialLogoWidth = computed(() => headerConfig.value.logoWidth)
-  // const targetLogoWidth = computed(() => headerConfig.value.logoTargetWidth)
 
   const logoWidth = computed(() =>
     lerp(
@@ -260,15 +243,10 @@ export function useScrollMonitor() {
 
   return {
     scrollY,
-    headerLocked,
-    setHeaderLocked,
     viewportWidth,
     viewportHeight,
     profile,
-    isPortrait,
-    initialLogoWidth,
     logoWidth,
-    initialHeaderHeight,
     targetHeaderHeight,
     headerProgress,
     headerHeight,
@@ -276,8 +254,12 @@ export function useScrollMonitor() {
     sectionBreaks,
     getProgress,
     getPhaseProgress,
-    getProgressByVh,
     inSection,
     totalScrollHeight,
   }
+}
+
+export function useScrollMonitor() {
+  if (!instance) instance = createScrollMonitor()
+  return instance
 }

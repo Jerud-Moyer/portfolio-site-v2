@@ -1,38 +1,32 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import CircleDeco from '../CircleDeco.vue'
-import type { ScrollMonitor } from '@/types.ts'
+import type { ScrollMonitor } from '@/types'
 import { lerp } from '@/composables/useScrollMonitor'
 
 const scrollMonitor = inject<ScrollMonitor>('scroll-monitor')
-const scrollY = scrollMonitor?.scrollY
-const vh = scrollMonitor?.viewportHeight
 
 const groupScrollUp = computed(() => {
-  const threshold = (vh?.value ?? 0) * 2.5
-  const progress = Math.max(0, (scrollY?.value ?? 0) - threshold)
-  const moveVh = -(progress / (vh?.value ?? 1)) * 100
-  return Math.max(moveVh, -120)
+  const progress = scrollMonitor?.getPhaseProgress('a', 0.625, 0.925) ?? 0
+  return lerp(0, -120, progress)
 })
+
+// was a hardcoded 1780px, then vh * 1.78 — now a fraction of section 'a'
+const pastColorThreshold = computed(() => (scrollMonitor?.getProgress('a') ?? 0) >= 0.445)
 
 const textTranslateY = computed(() => `calc(40vh + ${groupScrollUp.value}vh)`)
 const circleOneTranslateY = computed(() => `calc(-80px + ${groupScrollUp.value}vh)`)
 const circleTwoTranslateY = computed(() => `calc(350px + ${groupScrollUp.value}vh)`)
 
 const circleOneTranslateX = computed(() => {
-  const progress = scrollMonitor?.getProgressByVh('a', 1) ?? 0
+  const progress = scrollMonitor?.getPhaseProgress('a', 0, 0.25) ?? 0
   return `${lerp(30, -64, progress)}vw`
 })
 
 const circleTwoTranslateX = computed(() => {
-  const progress = scrollMonitor?.getProgressByVh('a', 2) ?? 0
+  const progress = scrollMonitor?.getPhaseProgress('a', 0, 0.5) ?? 0
   return `${lerp(40, -75, progress)}vw`
 })
-
-// text color flips once scroll passes ~1.78 screens (was a hardcoded 1780px
-// tuned to a ~1000px viewport; now expressed as a vh-multiple so it stays
-// in sync with section 'a' regardless of viewport height)
-const pastColorThreshold = computed(() => (scrollY?.value ?? 0) >= (vh?.value ?? 0) * 1.78)
 </script>
 
 <template>

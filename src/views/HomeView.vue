@@ -3,12 +3,12 @@ import Dots from '@/components/Dots.vue'
 import Header from '@/components/Header.vue'
 import ASection from '@/components/sections/ASection.vue'
 import BSection from '@/components/sections/BSection.vue'
-import CSection from '@/components/sections/CSection.vue'
-import DSection from '@/components/sections/DSection.vue'
-import ESection from '@/components/sections/ESection.vue'
+import { projects } from '@/assets/data/projects.js'
 import SectionContainer from '@/components/sections/SectionContainer.vue'
+import ESection from '@/components/sections/ESection.vue'
 import type { ScrollMonitor } from '@/types'
 import { computed, inject } from 'vue'
+import ProjectRowSection from '@/components/sections/ProjectRowSection.vue'
 
 const scrollMonitor = inject<ScrollMonitor>('scroll-monitor')
 const headerProgress = scrollMonitor?.headerProgress
@@ -38,7 +38,7 @@ const showDots = computed(() => {
 
 <template>
   <main
-    class="flex flex-col justify-center-safe p-4 w-full transition-colors duration-500"
+    class="flex flex-col justify-center-safe overflow-x-clip p-4 w-full transition-colors duration-500"
     :class="backgroundColor"
     :style="{ minHeight: totalScrollHeight }"
   >
@@ -57,6 +57,19 @@ const showDots = computed(() => {
       </div>
     </transition>
 
+    <!-- <SectionContainer :in-scroll-zone="inZoneE">
+      <ESection />
+    </SectionContainer>
+
+    <SectionContainer :in-scroll-zone="inZoneD">
+      <ProjectRowSection
+        section-id="d"
+        heading="some fun projects"
+        direction="ltr"
+        :projects="projects.fun ?? []"
+      />
+    </SectionContainer> -->
+
     <SectionContainer :in-scroll-zone="inZoneA">
       <ASection />
     </SectionContainer>
@@ -66,15 +79,33 @@ const showDots = computed(() => {
     </SectionContainer>
 
     <SectionContainer :in-scroll-zone="inZoneC">
-      <CSection />
+      <ProjectRowSection
+        section-id="c"
+        heading="some websites"
+        direction="rtl"
+        :projects="projects.websites ?? []"
+      />
     </SectionContainer>
 
     <SectionContainer :in-scroll-zone="inZoneD">
-      <DSection />
+      <ProjectRowSection
+        section-id="d"
+        heading="some fun projects"
+        direction="ltr"
+        :projects="projects.fun ?? []"
+      />
     </SectionContainer>
 
     <SectionContainer :in-scroll-zone="inZoneE">
       <ESection />
     </SectionContainer>
+    <!-- <SectionContainer :in-scroll-zone="inZoneD">
+      <ProjectRowSection
+        section-id="d"
+        heading="some fun projects"
+        direction="ltr"
+        :projects="projects.fun ?? []"
+      />
+    </SectionContainer> -->
   </main>
 </template>

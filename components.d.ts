@@ -34,6 +34,7 @@ declare module 'vue' {
     InputText: typeof import('primevue/inputtext')['default']
     Logo: typeof import('./src/components/Logo.vue')['default']
     ProjectCard: typeof import('./src/components/ProjectCard.vue')['default']
+    ProjectRowSection: typeof import('./src/components/sections/ProjectRowSection.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SectionContainer: typeof import('./src/components/sections/SectionContainer.vue')['default']

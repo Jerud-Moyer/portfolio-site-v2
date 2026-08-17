@@ -12,20 +12,17 @@ const subHeadingTranslateY = computed(() => {
 })
 
 const circleTranslateX = computed(() => {
-  const progress = scrollMonitor?.getProgressByVh('b', 3) ?? 0
+  const progress = scrollMonitor?.getPhaseProgress('b', 0, 0.46) ?? 0
   return `${lerp(-20, 120, progress)}vw`
 })
 
 const circleTranslateY = computed(() => {
-  const progress = scrollMonitor?.getProgressByVh('b', 4) ?? 0
+  const progress = scrollMonitor?.getPhaseProgress('b', 0, 0.62) ?? 0
   return `${lerp(-20, 120, progress)}vh`
 })
 
 const headingTranslateX = computed(() => {
-  // note: still scaling scrollY by 1.8 before computing progress, same as original
-  const scrollY = scrollMonitor?.scrollY.value ?? 0
-  const { start, end } = scrollMonitor?.sectionBreaks.value.b ?? { start: 0, end: 1 }
-  const progress = Math.min(Math.max((scrollY * 1.8 - start) / (end - start), 0), 1)
+  const progress = scrollMonitor?.getPhaseProgress('b', 0, 0.32) ?? 0
   return `${lerp(-30, 35, progress)}vw`
 })
 
@@ -42,7 +39,6 @@ const opacity = computed<number>(() => {
     <div
       class="fixed left-[6vw] top-[100vh] p-12 font-inconsolata text-lt-grey text-4xl"
       :style="{
-        transition: 'transform 100ms',
         transform: `translateY(${subHeadingTranslateY})`,
       }"
     >
@@ -55,14 +51,12 @@ const opacity = computed<number>(() => {
       fill-color="#7c7c79"
       class="fixed top-[24vh] left-0"
       :style="{
-        transition: 'transform 100ms',
         transform: `translate(${circleTranslateX}, ${circleTranslateY})`,
       }"
     />
     <p
       class="text-6xl font-inconsolata fixed top-[30vh] -left-[20vw] text-muted-teal text-shadow-sm text-shadow-carbon"
       :style="{
-        transition: 'transform 100ms',
         transform: `translateX(${headingTranslateX})`,
         opacity,
       }"

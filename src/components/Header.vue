@@ -17,11 +17,6 @@ const targetHeaderHeight = scrollMonitor?.targetHeaderHeight
 const headerCollapsed = computed<boolean>(() => headerHeight?.value === targetHeaderHeight?.value)
 
 const logoWidth = scrollMonitor?.logoWidth
-// const logoWidth = computed(() => {
-//   const adjustedWidth = initialLogoWidth?.value ?? 0 - (scrollMonitor?.scrollY.value ?? 0) / 2
-//   if (adjustedWidth <= 85) return 85
-//   return adjustedWidth
-// })
 
 const backgroundColor = computed(() => {
   if (headerHeight?.value) {
